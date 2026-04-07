@@ -1,0 +1,83 @@
+notation chen
+typeface clean
+
+
+
+Table users [textSize: medium, color: Black, icon: users] {
+  id serial [pk]
+  name varchar [not null]
+  email varchar [not null, unique]
+  phone varchar(20)
+  role varchar [not null, default: 'client']
+  password_hash VARCHAR(255) [not null]
+  is_active boolean [default: false]
+  created_at datetime
+}
+
+Table trainer_clients [color: Red, icon: k8s-user] {
+  id serial [pk]
+  trainer_id int [ref: > users.id]
+  client_id int [ref: > users.id]
+}
+
+Table plans [color: Orange, icon: azure-plans] {
+  id serial [pk]
+  trainer_id int [ref: > users.id]
+  name varchar
+  price decimal
+  descriptiton text
+  duration_days int
+}
+
+Table subscriptions [color: Yellow, icon: azure-subscriptions] {
+  id serial (PK)
+  client_id int [ref: > users.id]
+  plan_id int [ref: > plans.id]
+  start_date datetime
+  end_date datetime
+  status varchar
+}
+
+Table sessions [color: Blue, typeface: clean, icon: activity] {
+  id serial [pk]
+  trainer_id int [ref: > users.id]
+  client_id int [ref: > users.id]
+  session_date datetime
+  session_type varchar
+  status varchar
+}
+
+Table checkins [color: Purple, icon: check-circle] {
+  id serial [pk]
+  client_id int [ref: > users.id]
+  checkins_date datetime
+  weight decimal
+  notes text
+}
+
+Table progress [color: Orange, icon: progress] {
+  id serial [pk]
+  client_id int [ref: > users.id]
+  date datetime
+  weight decimal
+  body_fat decimal
+  chest decimal
+  waist decimal
+}
+
+Table trainer_notes [color: Red, icon: gcp-release-notes] {
+  id serial [pk]
+  trainer_id int [ref: > users.id]
+  client_id int [ref: > users.id]
+  note text
+  created_at datetime
+}
+
+Table payments [color: Yellow, icon: dollar-sign] {
+  id serial [pk]
+  subscription_id int [ref:> subscriptions.id]
+  amount decimal
+  status varchar
+  method varchar
+  payment_date datetime
+}
