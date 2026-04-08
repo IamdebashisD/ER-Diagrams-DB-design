@@ -1,0 +1,83 @@
+notation chen
+colorMode pastel
+styleMode plain
+
+Enum appointment_status {
+  scheduled
+  completed
+  cancelled
+}
+
+Enum payment_status {
+  pending
+  paid
+  failed
+}
+
+Table doctors [color: Purple] {
+  id serial [pk]
+  name varchar
+  email varchar
+  phone varchar
+  specialty_id int [ref: > specialties.id]
+}
+
+Table specialties [color: Yellow] {
+  id serial [pk]
+  name varchar
+}
+
+Table patients [color: Green] {
+  id serial [pk]
+  name varchar
+  email varchar
+  phone varchar
+  created_at datetime
+}
+
+Table appointments [color: Red] {
+  id serial [pk]
+  patient_id int [ref: > patients.id]
+  doctor_id int [ref: > doctors.id]
+  appointment_date datetime
+  status appointment_status
+}
+
+Table consultations [color: Orange] {
+  id serial [pk]
+  appointment_id int [ref: > appointments.id]
+  diagnosis text
+  notes text
+  consultation_date datetime
+}
+
+Table tests [color: Yellow] {
+  id serial [pk]
+  name varchar
+  description text
+  price decimal
+}
+
+Table consultation_tests [color: Blue] {
+  id serial [pk]
+  consultation_id int [ref: > consultations.id]
+  test_id int [ref: > tests.id]
+  status varchar
+}
+
+
+Table reports [color: Blue] {
+  id serial [pk]
+  consultation_test_id int [ref: > consultation_tests.id]
+  report_file varchar
+  result text
+  generated_at datetime
+}
+
+Table payments [color: Green] {
+  id serial [pk]
+  appointment_id int [ref: > appointments.id]
+  amount decimal
+  status payment_status
+  payment_date datetime
+}
