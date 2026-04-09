@@ -1,0 +1,62 @@
+typeface clean
+
+Enum payment_status {
+  pending
+  paid
+  failed
+}
+
+Enum session_status {
+  active
+  completed
+}
+
+Table vehicles [color: Red, typeface: clean] {
+  id serial [pk]
+  vehicle_number varchar [unique]
+  vehicle_type vehicle_type
+}
+
+Table parking_zones [color: Red] {
+  id serial [pk]
+  name varchar
+  level int
+}
+
+Table spot_categories [color: Red, typeface: clean] {
+  id serial [pk]
+  name varchar  // VIP, Staff, EV, General
+}
+
+Table parking_spots [color: Red] {
+  id serial [pk]
+  zone_id int [ref: > parking_zones.id]
+  spot_number varchar
+  category_id int [ref: > spot_categories.id]
+  is_available boolean
+}
+
+Table parking_tickets [color: Red, colorMode: pastel] {
+  id serial [pk]
+  ticket_number varchar
+  vehicle_id int [ref: > vehicles.id]
+  issued_at datetime
+}
+
+Table parking_sessions [color: Red] {
+  id serial [pk]
+  vehicle_id int [ref: > vehicles.id]
+  spot_id int [ref: > parking_spots.id]
+  ticket_id int [ref: > parking_tickets.id]
+  entry_time datetime
+  exit_time datetime
+  status session_status
+}
+
+Table payments [color: Red] {
+  id serial [pk]
+  session_id int [ref: > parking_sessions.id]
+  amount decimal
+  status payment_status
+  payment_time datetime
+}
