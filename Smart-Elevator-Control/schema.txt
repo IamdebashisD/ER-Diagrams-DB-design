@@ -1,0 +1,69 @@
+Table buildings {
+  id serial [pk]
+  name varchar
+  location varchar
+}
+
+Table floors {
+  id serial [pk]
+  building_id int [ref: > buildings.id]
+  floor_number int
+}
+
+Table elevator_shafts {
+  id serial [pk]
+  building_id int [ref: > buildings.id]
+  shaft_number varchar
+}
+
+Table elevators {
+  id serial [pk]
+  building_id int [ref: > buildings.id]
+  shaft_id int [ref: > elevator_shafts.id]
+  current_floor_id int [ref: > floors.id]
+}
+
+Table elevator_floor_map {
+  id serial [pk]
+  elevator_id int [ref: > elevators.id]
+  floor_id int [ref: > floors.id]
+}
+
+Table floor_requests {
+  id serial [pk]
+  floor_id int [ref: > floors.id]
+  direction varchar  Enum[ 'up', 'down' ]
+  request_time datetime
+  status Enum[ 'pending, 'assigned', 'completed' ]
+}
+
+Table ride_assignments {
+  id serial [pk]
+  request_id int [ref: > floor_requests.id]
+  elevator_id int [ref: > elevators.id]
+  assigned_at datetime
+}
+
+Table ride_logs {
+  id serial [pk]
+  elevator_id int [ref: > elevators.id]
+  start_floor_id int [ref: > floors.id]
+  end_floor_id int [ref: > floors.id]
+  start_time datetime
+  end_time datetime
+}
+
+Table elevator_status_logs {
+  id serial [pk]
+  elevator_id int [ref: > elevators.id]
+  status Enum[ 'idle', 'moving', 'maintenance' ]
+  updated_at datetime
+}
+
+Table maintenance_logs {
+  id serial [pk]
+  elevator_id int [ref: > elevators.id]
+  issue text
+  start_time datetime
+  end_time datetime
+}
